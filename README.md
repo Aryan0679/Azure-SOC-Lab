@@ -9,7 +9,6 @@ The full presentation and documentation for this lab can be accessed here:
 ## Overview
 This project demonstrates an end-to-end **Security Operations Center (SOC) workflow** in Microsoft Azure. The lab simulates a vulnerable VM environment to detect and visualize **brute-force and credential-stuffing attacks** using Microsoft Sentinel.
 
-As a freshman, I paired this hands-on lab with my **Network+ and Security+ knowledge**, building real-world skills in log ingestion, detection, alerting, and visualization.
 
 ---
 
@@ -19,7 +18,7 @@ As a freshman, I paired this hands-on lab with my **Network+ and Security+ knowl
 - Analyze failed login attempts to detect **credential-stuffing activity**.
 - Develop **KQL queries and analytics rules** to trigger automated alerts.
 - Build a **Sentinel dashboard / workbook** to visualize attacks on a geolocation map.
-- Apply MITRE ATT&CK mapping for threat analysis.
+
 
 ---
 
@@ -27,7 +26,7 @@ As a freshman, I paired this hands-on lab with my **Network+ and Security+ knowl
 
 1. **Azure VM**
    - Windows 10 Enterprise deployed as a vulnerable honeypot.
-   - Network Security Group configured to allow inbound RDP for testing purposes.
+   - Network Security Group and Windows firewalls adjusted and disabled.
 
 2. **Log Forwarding**
    - Installed Azure Monitoring Agent (AMA) on the VM.
@@ -45,8 +44,7 @@ As a freshman, I paired this hands-on lab with my **Network+ and Security+ knowl
 ```kql
 SecurityEvent
 | where EventID == 4625
-| where LogonType in (3, 10)
+| where LogonType == 3
 | summarize FailedAttempts = count() by IpAddress, bin(TimeGenerated, 5m)
 | where FailedAttempts >= 30
-| project TimeGenerated, IpAddress, FailedAttempts
-| order by FailedAttempts desc
+
